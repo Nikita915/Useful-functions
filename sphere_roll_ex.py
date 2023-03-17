@@ -41,23 +41,22 @@ new_RP4 = sphere_roll(RP2, q, False, axises=[1, 2])
 res = [[x1, y1, z1], [x2, y2, z2], [x3, y3, z3], [x4, y4, z4]]
 fig = plt.figure()
 
-for i in range(4):
-    ax = fig.add_subplot(2, 2, i + 1, projection='3d')
-    # Make data.
-    # Plot the surface.
-    surf = ax.plot_surface(*res[i], cmap=cm.coolwarm,
-                           linewidth=0, antialiased=False)
-    # Customize the z axis.
-    ax.set_zlim(-1.01, 1.01)
-    ax.zaxis.set_major_locator(LinearLocator(10))
-    # A StrMethodFormatter is used automatically
-    ax.zaxis.set_major_formatter('{x:.02f}')
+ax = fig.add_subplot(projection='3d')
+# Make data.
+# Plot the surface.
+surf = ax.plot_surface(*res[3], cmap=cm.coolwarm,
+                       linewidth=0, antialiased=False)
+# Customize the z axis.
+ax.set_zlim(-1.01, 1.01)
+ax.zaxis.set_major_locator(LinearLocator(10))
+# A StrMethodFormatter is used automatically
+ax.zaxis.set_major_formatter('{x:.02f}')
 
-    ax.xaxis.set_ticklabels([])
-    ax.yaxis.set_ticklabels([])
-    ax.zaxis.set_ticklabels([])
-    # Add a color bar which maps values to colors.
-    # fig.colorbar(surf, shrink=0.5, aspect=5)
+ax.xaxis.set_ticklabels([])
+ax.yaxis.set_ticklabels([])
+ax.zaxis.set_ticklabels([])
+# Add a color bar which maps values to colors.
+# fig.colorbar(surf, shrink=0.5, aspect=5)
 
 
 plt.show()
