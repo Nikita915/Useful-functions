@@ -27,7 +27,7 @@ def LLL(G, delta=0.75):
             U[:, i] -= U[:, k] * np.round(GH_factor)
 
         GH_factor = (G[:, i] @ B[:, i - 1]) / (B[:, i - 1] @ B[:, i - 1])
-        if (delta - GH_factor ** 2) * np.sum(B[:, i - 1] ** 2) <= np.sum(B[:, i] ** 2):
+        if (delta - GH_factor ** 2) * (B[:, i - 1] @ B[:, i - 1]) <= (B[:, i] @ B[:, i]):
             i += 1
         else:
             G[:, [i, i - 1]] = G[:, [i - 1, i]]
