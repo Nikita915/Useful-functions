@@ -1,0 +1,39 @@
+from ups_funcs import *
+
+
+qpsk = np.array([1, 1, -1, -1]) + 1j * np.array([1, -1, -1, 1])
+
+ups = 16.     # upsample symbols, ~ 1/sB (sB - subband)  [1.2 = -3dB subband overlap]
+n = 4         # n/2 subbands
+N = 2**13     # frames, without ups
+n_fft = 16
+carr_freq = 0.0
+frames_sym = np.random.choice(qpsk, [N, n_fft])
+
+frames_sym[:, 1::2] = 0
+
+frames_td = ifft(frames_sym, axis=1)
+frames_td = np.concatenate([np.tile(frames_td, (1, int(ups))), frames_td[:, :int(n_fft * (ups % 1))]], axis=1)
+
+signal = frames_td.reshape(-1)
+signal *= np.exp(1j * np.pi * carr_freq * np.arange(len(signal)))
+signal = ifft(fft(signal) * rrc_fd(len(signal), 1 / 0.06, 0.2))
+signal_ds = signal[::256]
+
+
+mp.subplot(2, 1, 1)
+hard = np.sign(signal_ds)
+err = frames_sym[:, 0] - hard
+mp.title(f"OFDM TD, BER: {np.round((np.sum(np.abs(np.sign(err.real))) / len(err)), 2)}")
+mp.plot(hard)
+mp.plot(frames_sym[:, 0])
+mp.plot(err)
+mp.grid()
+
+
+mp.subplot(2, 1, 2)
+mp.title("OFDM FD")
+n_psd = 4096
+mp.plot(np.linspace(-1, 1, n_psd), psd(signal, n_psd))
+mp.grid()
+mp.show()
